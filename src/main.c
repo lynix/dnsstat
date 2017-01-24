@@ -78,13 +78,13 @@ static inline qlist_t *find_query(uint16_t id)
     return NULL;
 }
 
-void dns_decode_name_type(qlist_t *entry, const char *src)
+void dns_decode_name_type(qlist_t *entry, const unsigned char *src)
 {
     char *name = malloc(DNS_MAX_LEN);
     if (name == NULL)
         err_exit("out of memory allocating name buffer");
 
-    const char *p = src;
+    const unsigned char *p = src;
     char *pname = name;
     while (*p != '\0') {
         int len = *p;
