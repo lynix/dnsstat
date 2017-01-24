@@ -38,6 +38,13 @@ directory.
 Just run the binary with a pcap file as argument:
 ```
 $ ./dnsstat /path/to/trace.pcap
+no. queries: 309
+no. replies: 307
+no. lost:    2 (0.01%)
+min. delay:  0.11 ms
+avg. delay:  66.89 ms
+max. delay:  1052.54 ms
+std. dev.:   206.59 ms
 ```
 Help is available using `-h`.
 
