@@ -87,7 +87,7 @@ void dns_decode_name_type(qlist_t *entry, const char *src)
     const char *p = src;
     char *pname = name;
     while (*p != '\0') {
-        char len = *p;
+        int len = *p;
         memcpy(pname, p+1, len);
         pname[len] = '.';
         pname += len + 1;
