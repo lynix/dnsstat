@@ -229,13 +229,15 @@ int main(int argc, char *argv[])
     dev = sqrt(dev);
 
     // print statistics
-    printf("no. queries: %lu\n", num_queries);
-    printf("no. replies: %lu\n", num_replies);
-    printf("no. lost:    %lu (%.2f%%)\n", num_lost, perc_lost);
-    printf("min. delay:  %.2f ms\n", min);
-    printf("avg. delay:  %.2f ms\n", avg);
-    printf("max. delay:  %.2f ms\n", max);
-    printf("std. dev.:   %.2f ms\n", dev);
+    puts("Queries");
+    printf("    sent:      %8lu\n", num_queries);
+    printf("    answered:  %8lu\n", num_replies);
+    printf("    lost:      %8lu (%.2f%%)\n", num_lost, perc_lost);
+    puts("Delay");
+    printf("    min:       %8.2f ms\n", min);
+    printf("    avg:       %8.2f ms\n", avg);
+    printf("    max:       %8.2f ms\n", max);
+    printf("    stdev:     %8.2f ms\n", dev);
 
     // dump query list if requested
     if (strcmp(argv[1], "-v") == 0) {
