@@ -2,6 +2,8 @@
 
 **libpcap-based tool for analyzing DNS performance**
 
+[![Build Status](https://travis-ci.org/lynix/dnsstat.svg?branch=master)](https://travis-ci.org/lynix/dnsstat)
+
 Copyright 2017 by Alexander Koch
 
 
