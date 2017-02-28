@@ -184,6 +184,9 @@ static inline void print_help()
     puts("Arguments:");
     puts("  FILE  PCAP file to analyze");
     puts("  -v    Dump list of queries captured");
+    puts("");
+    printf("dnsstat version %s, built %s %s.\n", GIT_VERSION, __DATE__,
+           __TIME__);
 }
 
 int main(int argc, char *argv[])
