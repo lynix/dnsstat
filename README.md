@@ -9,7 +9,7 @@ Copyright 2017 by Alexander Koch
 
 ## About
 
-_debugdns_ was created in desperate need for having a tool to debug DNS problems
+_dnsstat_ was created in desperate need for having a tool to debug DNS problems
 on a home-broadband connection. Surfing the web felt slow and stuttery, but
 issuing test-queries using _dig_ never yielded any lost query, so I decided to
 capture all DNS traffic and do offline analysis.
