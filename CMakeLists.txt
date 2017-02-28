@@ -12,5 +12,7 @@ set(CMAKE_EXE_LINKER_FLAGS "-s")
 
 aux_source_directory(src SRC_LIST)
 
+include(git-version.cmake)
+
 add_executable(${PROJECT_NAME} ${SRC_LIST})
 target_link_libraries(${PROJECT_NAME} pcap m)
