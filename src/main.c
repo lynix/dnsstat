@@ -78,7 +78,7 @@ void err_exit(const char *format, ...)
 static inline qlist_t *find_query(uint16_t id)
 {
     for (qlist_t *p = list; p != NULL; p = p->prev)
-        if (p->id == id)
+        if (p->id == id && p->delay_ms == -1)
             return p;
 
     return NULL;
