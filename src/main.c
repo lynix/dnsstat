@@ -226,7 +226,7 @@ int main(int argc, char *argv[])
 
     // calculate loss
     uint64_t num_lost = num_queries - num_replies;
-    double perc_lost = (double)num_lost / (double)num_queries;
+    double perc_lost = (double)num_lost / (double)num_queries * 100.0;
 
     // calculate average delay
     double avg = 0;
