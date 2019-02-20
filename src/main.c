@@ -257,9 +257,14 @@ int main(int argc, char *argv[])
     // dump query list if requested
     if (strcmp(argv[1], "-v") == 0) {
         puts("");
-        for (qlist_t *p = list; p != NULL; p = p->prev)
-            printf("%04x  %7.2fms  %4s %s\n", p->id, p->delay_ms,
-                   dns_qtypestr(p->type), p->name);
+        for (qlist_t *p = list; p != NULL; p = p->prev) {
+            printf("%04x", p->id);
+            if (p->delay_ms > 0)
+                printf("  %7.2fms", p->delay_ms);
+            else
+                printf("        -  ");
+            printf("  %4s  %s\n", dns_qtypestr(p->type), p->name);
+        }
     }
 
     // clean-up
