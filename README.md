@@ -9,23 +9,31 @@ Copyright 2017, 2019, 2021 by Alexander Koch
 
 ## About
 
-_dnsstat_ was created in desperate need for having a tool to debug DNS problems
-on a home-broadband connection. Surfing the web felt slow and stuttery, but
-issuing test-queries using _dig_ never yielded any lost query, so I decided to
-capture all DNS traffic and do offline analysis.
+_dnsstat_ has been created in desperate need for a tool for debugging DNS
+issues on a broadband connection at home. Surfing the web felt slow and
+stuttery but issuing test queries using [dig](https://linux.die.net/man/1/dig)
+never yielded any lost query, so the author decided to capture all DNS traffic
+and perform an offline analysis.
 
-Fiddling around with Wireshark traces then felt just wrong at some point. Never
-do analysis on large datasets by hand that a machine can do much better for you
-instead.
+_dnsstat_ implements this analysis, enabling its user to avoid manual
+accounting using [Wireshark](https://www.wireshark.org) and the-like.
+
+### Limitations
+
+Currently _dnsstat_ only recognizes DNS packets matching the following criteria:
+* Layer 1-2: Ethernet
+* Layer 3: IPv4 or IPv6
+* single DNS query/response per packet
 
 
 ## Building
 
 Make sure you have the following requirements installed:
+* cmake
 * libpcap (tested with 1.8.1)
 
 The code is supplied as a *CMake* project so either use your favorite IDE or
-compile manually (example builds inside source tree):
+compile manually:
 ```
 $ cmake .
 $ make
@@ -37,7 +45,7 @@ directory.
 
 ## Usage
 
-Just run the binary with a pcap file as argument:
+Run the binary with a pcap file as argument:
 ```
 $ ./dnsstat /path/to/trace.pcap
 Queries
@@ -52,13 +60,18 @@ Delay
 ```
 Help is available using `-h`.
 
+A packet trace for analysis can be obtained using `tcpdump`:
+```
+$ tcpdump -i eth0 -w trace.pcap 'udp port 53'
+```
+
 
 ## Contributing
 
-I provide this _as-is_, in hope that it might be of any use for someone who
-needs to debug DNS problems or collect DNS performance metrics.
+This project is provided this _as-is_, in hope that it might be of any use for
+someone who needs to debug DNS issues or collect DNS performance metrics.
 
-Pull requests for improvements or bug fixes are always welcome.
+Pull requests for improvements or bug fixes are greatly appreciated.
 
 
 ## License
