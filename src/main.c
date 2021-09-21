@@ -1,4 +1,4 @@
-/* Copyright 2017, 2019 Alexander Koch <lynix47@gmail.com>
+/* Copyright 2017, 2019, 2021 Alexander Koch <mail@alexanderkoch.net>
  *
  * This file is part of 'dnsstat'. 'dnsstat' is distributed under the terms of
  * the MIT License, see file LICENSE.
