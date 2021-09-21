@@ -14,13 +14,18 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define IP_TYPE_OFFS        23
+#define ETH_TYPE_OFFS       12
+#define IP4_TYPE_OFFS       23
+#define IP6_TYPE_OFFS       20
 #define IP_TYPE_UDP         0x11
-#define UDP_PORT_OFFS_SRC   34
-#define UDP_PORT_OFFS_DST   36
-#define UDP_PAYLOAD_OFFS    42
+#define IP4_UDP_PORT_OFFS_SRC   34
+#define IP6_UDP_PORT_OFFS_SRC   54
+#define IP4_UDP_PORT_OFFS_DST   36
+#define IP6_UDP_PORT_OFFS_DST   56
+#define IP4_UDP_PAYLOAD_OFFS    42
+#define IP6_UDP_PAYLOAD_OFFS    62
 #define DNS_QUERY_TYPE_OFFS 44
-#define DNS_NAME_OFFS       54
+#define DNS_NAME_OFFS       12
 #define PORT_DNS            53
 #define DNS_MAX_LEN         512
 
@@ -53,6 +58,8 @@ typedef struct {
     uint16_t arcount;
 } __attribute__((packed)) dns_header_t;
 
+static const uint8_t ETH_TYPE_IPV4[] = { 0x08, 0x00 };
+static const uint8_t ETH_TYPE_IPV6[] = { 0x86, 0xdd };
 
 qlist_t *list = NULL;
 uint64_t num_queries = 0;
@@ -123,23 +130,37 @@ static inline const char *dns_qtypestr(query_type_t type)
 void pkg_handler(u_char *unused, const struct pcap_pkthdr *pkg_hdr,
                  const u_char *pkg_data)
 {
+    uint8_t ip_type_offs = IP4_TYPE_OFFS;
+    uint8_t udp_port_offs_src = IP4_UDP_PORT_OFFS_SRC;
+    uint8_t udp_port_offs_dst = IP4_UDP_PORT_OFFS_DST;
+    uint8_t udp_payload_offs = IP4_UDP_PAYLOAD_OFFS;
+    if (memcmp(pkg_data + ETH_TYPE_OFFS, ETH_TYPE_IPV6, sizeof(ETH_TYPE_IPV6)) == 0) {
+       ip_type_offs = IP6_TYPE_OFFS;
+       udp_port_offs_src = IP6_UDP_PORT_OFFS_SRC;
+       udp_port_offs_dst = IP6_UDP_PORT_OFFS_DST;
+       udp_payload_offs = IP6_UDP_PAYLOAD_OFFS;
+    } else if (memcmp(pkg_data + ETH_TYPE_OFFS, ETH_TYPE_IPV4, sizeof(ETH_TYPE_IPV4)) != 0) {
+        // SKIP non-IPv6 non-IPv4 packets
+        return;
+    }
+
     // skip non-UDP packets
-    if (pkg_data[IP_TYPE_OFFS] != IP_TYPE_UDP)
+    if (pkg_data[ip_type_offs] != IP_TYPE_UDP)
         return;
 
     // skip non-DNS packets
-    if (ntohs(*(uint16_t *)(pkg_data + UDP_PORT_OFFS_SRC)) != PORT_DNS)
-        if (ntohs(*(uint16_t *)(pkg_data + UDP_PORT_OFFS_DST)) != PORT_DNS)
+    if (ntohs(*(uint16_t *)(pkg_data + udp_port_offs_src)) != PORT_DNS)
+        if (ntohs(*(uint16_t *)(pkg_data + udp_port_offs_dst)) != PORT_DNS)
             return;
 
     // skip truncated packets
-    if (pkg_hdr->caplen <= DNS_NAME_OFFS) {
+    if (pkg_hdr->caplen <= udp_payload_offs + DNS_NAME_OFFS) {
         fprintf(stderr, "warning: skipping truncated package (%u captured, "\
                 "%u on wire)\n", pkg_hdr->caplen, pkg_hdr->len);
         return;
     }
 
-    dns_header_t *header = (dns_header_t *)(pkg_data + UDP_PAYLOAD_OFFS);
+    dns_header_t *header = (dns_header_t *)(pkg_data + udp_payload_offs);
 
     // skip multi-query messages
     if  (DNS_FLAGS_QR(header->flags) == 0 && ntohs(header->qdcount) != 1) {
@@ -160,7 +181,7 @@ void pkg_handler(u_char *unused, const struct pcap_pkthdr *pkg_hdr,
         entry->id           = ntohs(header->id);
         entry->delay_ms     = -1;
         entry->prev         = list;
-        dns_decode_name_type(entry, pkg_data + DNS_NAME_OFFS);
+        dns_decode_name_type(entry, pkg_data + udp_payload_offs + DNS_NAME_OFFS);
 
         list = entry;
         num_queries++;
