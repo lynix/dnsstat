@@ -20,7 +20,6 @@
 #define UDP_PORT_OFFS_DST   36
 #define UDP_PAYLOAD_OFFS    42
 #define DNS_QUERY_TYPE_OFFS 44
-#define DNS_NUM_QUERIES     47
 #define DNS_NAME_OFFS       54
 #define PORT_DNS            53
 #define DNS_MAX_LEN         512
