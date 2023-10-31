@@ -32,11 +32,12 @@
 #define DNS_FLAGS_QR(x) ((ntohs(x) & 0x8000) >> 7)
 
 typedef enum {
-    QUERY_A    = 0x0001,
-    QUERY_PTR  = 0x000c,
-    QUERY_TXT  = 0x0010,
-    QUERY_AAAA = 0x001c,
-    QUERY_SRV  = 0x0021
+    QUERY_A     = 0x0001,
+    QUERY_PTR   = 0x000c,
+    QUERY_TXT   = 0x0010,
+    QUERY_AAAA  = 0x001c,
+    QUERY_SRV   = 0x0021,
+    QUERY_HTTPS = 0x0041
 } query_type_t;
 
 struct qlist {
@@ -123,6 +124,8 @@ static inline const char *dns_qtypestr(query_type_t type)
         return "SRV";
     if (type == QUERY_TXT)
         return "TXT";
+    if (type == QUERY_HTTPS)
+        return "HTTPS";
 
     return "???";
 }
@@ -283,7 +286,7 @@ int main(int argc, char *argv[])
                 printf("  %7.2fms", p->delay_ms);
             else
                 printf("        -  ");
-            printf("  %4s  %s\n", dns_qtypestr(p->type), p->name);
+            printf("  %5s  %s\n", dns_qtypestr(p->type), p->name);
         }
     }
 
