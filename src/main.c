@@ -19,11 +19,9 @@
 #define IP6_TYPE_OFFS       20
 #define IP_TYPE_UDP         0x11
 #define IP4_UDP_PORT_OFFS_SRC   34
-#define IP6_UDP_PORT_OFFS_SRC   54
 #define IP4_UDP_PORT_OFFS_DST   36
-#define IP6_UDP_PORT_OFFS_DST   56
 #define IP4_UDP_PAYLOAD_OFFS    42
-#define IP6_UDP_PAYLOAD_OFFS    62
+#define IP6_UDP_OFFS        20
 #define DNS_QUERY_TYPE_OFFS 44
 #define DNS_NAME_OFFS       12
 #define PORT_DNS            53
@@ -139,9 +137,9 @@ void pkg_handler(u_char *unused, const struct pcap_pkthdr *pkg_hdr,
     uint8_t udp_payload_offs = IP4_UDP_PAYLOAD_OFFS;
     if (memcmp(pkg_data + ETH_TYPE_OFFS, ETH_TYPE_IPV6, sizeof(ETH_TYPE_IPV6)) == 0) {
        ip_type_offs = IP6_TYPE_OFFS;
-       udp_port_offs_src = IP6_UDP_PORT_OFFS_SRC;
-       udp_port_offs_dst = IP6_UDP_PORT_OFFS_DST;
-       udp_payload_offs = IP6_UDP_PAYLOAD_OFFS;
+       udp_port_offs_src += IP6_UDP_OFFS;
+       udp_port_offs_dst += IP6_UDP_OFFS;
+       udp_payload_offs += IP6_UDP_OFFS;
     } else if (memcmp(pkg_data + ETH_TYPE_OFFS, ETH_TYPE_IPV4, sizeof(ETH_TYPE_IPV4)) != 0) {
         // SKIP non-IPv6 non-IPv4 packets
         return;
