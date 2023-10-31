@@ -31,10 +31,13 @@
 
 typedef enum {
     QUERY_A     = 0x0001,
+    QUERY_SOA   = 0x0006,
     QUERY_PTR   = 0x000c,
+    QUERY_MX    = 0x000f,
     QUERY_TXT   = 0x0010,
     QUERY_AAAA  = 0x001c,
     QUERY_SRV   = 0x0021,
+    QUERY_SVCB  = 0x0040,
     QUERY_HTTPS = 0x0041
 } query_type_t;
 
@@ -114,6 +117,10 @@ static inline const char *dns_qtypestr(query_type_t type)
 {
     if (type == QUERY_A)
         return "A";
+    if (type == QUERY_SOA)
+        return "SOA";
+    if (type == QUERY_MX)
+        return "MX";
     if (type == QUERY_AAAA)
         return "AAAA";
     if (type == QUERY_PTR)
@@ -122,6 +129,8 @@ static inline const char *dns_qtypestr(query_type_t type)
         return "SRV";
     if (type == QUERY_TXT)
         return "TXT";
+    if (type == QUERY_SVCB)
+        return "SVCB";
     if (type == QUERY_HTTPS)
         return "HTTPS";
 
